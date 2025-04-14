@@ -1,0 +1,9 @@
+{
+    "scripts": [
+        "create path (sling:OrderedFolder) /content/dam/import",
+        "create path (nt:unstructured) /content/dam/import/jcr:content",
+        "set properties on /content/dam/import/jcr:content\n  set cq:conf{String} to /conf/import\n  set jcr:title{String} to \"Clam Migration\"\nend",
+        "create service user page-import-service with path system/clam/import",
+        "set principal ACL for page-import-service\n  allow jcr:all on /content/import\n  end"
+    ]
+}
