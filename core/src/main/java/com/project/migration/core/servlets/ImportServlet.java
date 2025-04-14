@@ -20,13 +20,13 @@ import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component(service = Servlet.class, property = {Constants.SERVICE_DESCRIPTION + "= Page Importer", "sling.servlet.methods=" + HttpConstants.METHOD_POST, "sling.servlet.paths=/bin/create-article.json"})
-public class PageImporterServlet extends SlingAllMethodsServlet {
+@Component(service = Servlet.class, property = {Constants.SERVICE_DESCRIPTION + "=Import Servlet", "sling.servlet.methods=" + HttpConstants.METHOD_POST, "sling.servlet.paths=/bin/import.json"})
+public class ImportServlet extends SlingAllMethodsServlet {
 
     /**
      * LOGGER
      **/
-    private static final Logger LOGGER = LoggerFactory.getLogger(PageImporterServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImportServlet.class);
 
     @Reference
     protected transient PageImportService importService;
@@ -35,14 +35,14 @@ public class PageImporterServlet extends SlingAllMethodsServlet {
     protected void doPost(SlingHttpServletRequest request, SlingHttpServletResponse response) throws IOException {
         JsonObject responseJsonObject = new JsonObject();
         response.setContentType("application/json;charset=UTF-8");
-        LOGGER.info("Inside PageImporterServlet doPost");
+        LOGGER.info("Inside ImportServlet doPost");
         String jsonString = IOUtils.toString(request.getReader());
         LOGGER.info("Json string is {}", jsonString);
         JsonArray jsonArray = JsonParser.parseString(jsonString).getAsJsonArray();
         LOGGER.info("jsonArray is {}", jsonArray);
         if (!jsonArray.isEmpty()) {
             responseJsonObject = importService.createPages(jsonArray);
-            LOGGER.info("Successfully ran PageImporterServlet");
+            LOGGER.info("Successfully ran ImportServlet");
             responseJsonObject.add("message", new JsonPrimitive("OK"));
             response.getWriter().println(responseJsonObject);
             response.setStatus(HttpServletResponse.SC_OK);
